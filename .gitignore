@@ -1,0 +1,58 @@
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+# set my ignore
+*/cocos2d/*
+*/proj.win32/Debug.win32/*
+*/proj.win32/cells.sdf
+*/proj.win32/cells.opensdf
+*/proj.android/obj/*
+*/proj.android/bin/*
+*/proj.android/assets/*
+*/proj.android/gen/*
+*/bin/*
+*/proj.ios_mac/cells.xcodeproj/project.xcworkspace
+*/proj.ios_mac/cells.xcodeproj/xcuserdata

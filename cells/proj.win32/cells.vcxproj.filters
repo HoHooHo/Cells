@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="win32">
+      <UniqueIdentifier>{84a8ebd7-7cf0-47f6-b75e-d441df67da40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes">
+      <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{715254bc-d70b-4ec5-bf29-467dd3ace079}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload">
+      <UniqueIdentifier>{a091d6ce-87ec-4dde-8573-54d37293d8f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\Cell">
+      <UniqueIdentifier>{e44cbeef-39ec-48fe-b029-b0a1e9aea6d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\Download">
+      <UniqueIdentifier>{396d58c2-8520-4c53-b8c1-a69b0311a4dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\MD5">
+      <UniqueIdentifier>{409f122d-cbaf-4c5f-8375-90741b678b77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\Utils">
+      <UniqueIdentifier>{a730c657-3f3d-4f5f-b940-31eb1cb7f91a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\MD5\MD5">
+      <UniqueIdentifier>{0337ea03-2686-4ae5-91bb-594ceb6f4c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\Cell\Cell">
+      <UniqueIdentifier>{9eee8fea-8a9c-4910-bfce-2ffed9d8a2f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\Cell\CellWorker">
+      <UniqueIdentifier>{9844e129-1314-4178-8671-8e602e8f485d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\CellDownload\Cell\Handler">
+      <UniqueIdentifier>{2688951b-a915-414f-9b51-e07846cfc09b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\AppDelegate.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
+      <Filter>Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\CellDownloadManager.cpp">
+      <Filter>Classes\CellDownload</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Download\Downloader.cpp">
+      <Filter>Classes\CellDownload\Download</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\MD5\QuickMD5.cpp">
+      <Filter>Classes\CellDownload\MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\MD5\MD5\md5.c">
+      <Filter>Classes\CellDownload\MD5\MD5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Utils\DirUtil.cpp">
+      <Filter>Classes\CellDownload\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\Handler\CellHandler.cpp">
+      <Filter>Classes\CellDownload\Cell\Handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\CellWorker\CellWorker.cpp">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\CellWorker\CellWorkerFactory.cpp">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\Cell\Cell.cpp">
+      <Filter>Classes\CellDownload\Cell\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\Cell\CellParser.cpp">
+      <Filter>Classes\CellDownload\Cell\Cell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\CellWorker\CellCheckWorker.cpp">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\CellWorker\CellDownloadWorker.cpp">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\CellDownload\Cell\CellWorkCenter.cpp">
+      <Filter>Classes\CellDownload\Cell</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>win32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AppDelegate.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\HelloWorldScene.h">
+      <Filter>Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\CellDownloadManager.h">
+      <Filter>Classes\CellDownload</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Download\Downloader.h">
+      <Filter>Classes\CellDownload\Download</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\MD5\QuickMD5.h">
+      <Filter>Classes\CellDownload\MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\MD5\MD5\md5.h">
+      <Filter>Classes\CellDownload\MD5\MD5</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Utils\DirUtil.h">
+      <Filter>Classes\CellDownload\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Utils\CellPlatform.h">
+      <Filter>Classes\CellDownload\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Utils\CellMacro.h">
+      <Filter>Classes\CellDownload\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Download\DownloadConig.h">
+      <Filter>Classes\CellDownload\Download</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\Handler\CellHandler.h">
+      <Filter>Classes\CellDownload\Cell\Handler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorker\CellWorker.h">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorker\CellWorkerFactory.h">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\Cell\Cell.h">
+      <Filter>Classes\CellDownload\Cell\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\Cell\CellParser.h">
+      <Filter>Classes\CellDownload\Cell\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorker\CellCheckWorker.h">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorker\CellDownloadWorker.h">
+      <Filter>Classes\CellDownload\Cell\CellWorker</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\Cell\CellContainer.h">
+      <Filter>Classes\CellDownload\Cell\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorkCenter.h">
+      <Filter>Classes\CellDownload\Cell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorkState.h">
+      <Filter>Classes\CellDownload\Cell</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="game.rc">
+      <Filter>resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
