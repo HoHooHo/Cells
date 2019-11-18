@@ -113,7 +113,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 	m++ ;
 	if (m == 1)
 	{
-		cdm = new CellDownloadManager("127.0.0.1", 3, "D:/project/test_cocos3.2/cells/Resources", FileUtils::getInstance()->getWritablePath() + "res") ;
+		cdm = new CellDownloadManager("127.0.0.1/celltest", 3, "E:/project/github/Cells/cells/Resources", FileUtils::getInstance()->getWritablePath() + "Resources") ;
 		
 		cdm->registerObserver(DownloadObserverFunctor(foo)) ;
 		cdm->postWork("cells.xml") ;
