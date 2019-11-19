@@ -1,14 +1,25 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "CellDownloadWorker.h"
 #include "../../Utils/DirUtil.h"
+#include "../../MD5/QuickMD5.h"
 
 NS_CELL_BEGIN
 
 CellDownloadWorker::CellDownloadWorker(DownloadConig* config)
 	:CellWorker(config)
 	,_fp(nullptr)
+	,_desFileName("")
 	,_dowloader(nullptr)
 {
-	_dowloader = new Downloader() ;
+	_dowloader = new Downloader(5L, 60L) ;
 
 	create() ;
 }
@@ -42,15 +53,49 @@ bool CellDownloadWorker::doWork(Cell* cell)
 
 			startDownload(cell, brokenResume) ;
 
-			std::string fitlURL = url + cell->getName() ;
+			std::string cellName = cell->getName() ;
 
-			bRet = _dowloader->download(fitlURL.c_str(), _fp, brokenResume) ;
+			std::string fileURL = url + cellName + "?md5=" + cell->getMD5() ;
 
-			finishDownload(cell) ;
+
+			bRet = _dowloader->download(fileURL.c_str(), _fp, brokenResume) ;
+
+			finishDownload(cell, bRet) ;
+
+			//bRet = bRet && (cell->getMD5().compare(QuickMD5::getInstance()->MD5File(_desFileName.c_str())) == 0) ;
+
+			if (bRet)
+			{
+				std::string dir = DirUtil::getInstance()->getDirByFileName(_desFileName) ;
+				std::string fileName = DirUtil::getInstance()->getNameByFileName(_desFileName) ;
+				std::string tempFileName = DirUtil::getInstance()->getNameByFileName(_desFileNameTemp) ;
+				bRet = cell->getMD5().compare(QuickMD5::getInstance()->MD5File(_desFileNameTemp.c_str())) == 0 ;
+				if (bRet)
+				{
+					DirUtil::getInstance()->renameFile(dir, tempFileName, fileName) ;
+				}else
+				{
+					CELL_LOG("***   MD5 Faile    ***") ;
+				}
+
+
+				if ( bRet && cellName.substr(cellName.size() - 4) == ".zip" )
+				{
+					bRet = DirUtil::getInstance()->decompress(_desFileName) ;
+					if (!bRet)
+					{
+						DirUtil::getInstance()->removeFile(_desFileName) ;
+					}
+				}
+			}
+
 
 			if (bRet)
 			{
 				break ;
+			}else
+			{
+				_dowloader->reset() ;
 			}
 		}
 	}
@@ -81,14 +126,15 @@ void CellDownloadWorker::startDownload(Cell* cell, bool brokenResume)
 {
 	std::string name = cell->getName() ;
 	std::string md5Name = cell->getMD5Name() ;
-
 	std::string desRoot = _config->getDesRoot() ;
 
-	std::string file = desRoot + name ;
+	_desFileName = desRoot + name ;
+	_desFileNameTemp = _desFileName + TEMP_SUFFIX ;
+
 	std::string md5File = desRoot + md5Name ;
 
 	_createDirMutex.lock() ;
-	DirUtil::getInstance()->createDirByFileName(file) ;
+	DirUtil::getInstance()->createDirByFileName(_desFileName) ;
 	_createDirMutex.unlock() ;
 
 	if ( !brokenResume )
@@ -97,20 +143,24 @@ void CellDownloadWorker::startDownload(Cell* cell, bool brokenResume)
 	}
 
 	_fp = brokenResume ?
-		fopen(file.c_str(), "ab+") :
-		fopen(file.c_str(), "wb+") ;
+		fopen(_desFileNameTemp.c_str(), "ab+") :
+		fopen(_desFileNameTemp.c_str(), "wb+") ;
 }
 
-void CellDownloadWorker::finishDownload(Cell* cell)
+void CellDownloadWorker::finishDownload(Cell* cell, bool result)
 {
 	fclose(_fp) ;
 	_fp = nullptr ;
 
-	std::string md5Name = cell->getMD5Name() ;
-	std::string desRoot = _config->getDesRoot() ;
-	std::string md5File = desRoot + md5Name ;
+	if (result)
+	{
 
-	removeMD5File(md5File.c_str()) ;
+		std::string md5Name = cell->getMD5Name() ;
+		std::string desRoot = _config->getDesRoot() ;
+		std::string md5File = desRoot + md5Name ;
+
+		removeMD5File(md5File.c_str()) ;
+	}
 }
 
 
@@ -121,10 +171,12 @@ bool CellDownloadWorker::needBrokenResume(Cell* cell)
 	std::string desRoot = _config->getDesRoot() ;
 
 	std::string md5File = desRoot + md5Name ;
-	if (DirUtil::getInstance()->isFileExist(md5File.c_str()))
+	std::string tempFile = desRoot + cell->getName() + TEMP_SUFFIX
+	if (DirUtil::getInstance()->isFileExist(md5File.c_str(), true) && DirUtil::getInstance()->isFileExist(tempFile.c_str(), true))
 	{
 		std::string brokenMD5 = DirUtil::getInstance()->getStringFromFile(md5File.c_str()) ;
-		if (cell->getMD5().compare(brokenMD5) == 0)
+
+		if (cell->getMD5().compare(brokenMD5) == 0 && cocos2d::FileUtils::getInstance()->getFileSize(tempFile) < cell->getSize() )
 		{
 			brokenResume = true ;
 		}

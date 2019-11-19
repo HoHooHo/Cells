@@ -1,0 +1,125 @@
+
+attack_tt.png
+size: 1024,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bk_0001
+  rotate: true
+  xy: 951, 99
+  size: 27, 48
+  orig: 50, 100
+  offset: 0, 27
+  index: -1
+bk_0002
+  rotate: true
+  xy: 841, 85
+  size: 41, 61
+  orig: 50, 100
+  offset: 9, 29
+  index: -1
+bk_0003
+  rotate: true
+  xy: 513, 91
+  size: 35, 94
+  orig: 50, 100
+  offset: 11, 6
+  index: -1
+bk_0004
+  rotate: true
+  xy: 513, 60
+  size: 29, 93
+  orig: 50, 100
+  offset: 18, 3
+  index: -1
+bk_0005
+  rotate: true
+  xy: 609, 101
+  size: 25, 97
+  orig: 50, 100
+  offset: 22, 0
+  index: -1
+gj_0001
+  rotate: true
+  xy: 438, 56
+  size: 70, 73
+  orig: 106, 102
+  offset: 19, 14
+  index: -1
+gj_0002
+  rotate: false
+  xy: 205, 48
+  size: 75, 78
+  orig: 106, 102
+  offset: 16, 12
+  index: -1
+gj_0003
+  rotate: false
+  xy: 109, 32
+  size: 94, 94
+  orig: 106, 102
+  offset: 7, 4
+  index: -1
+gj_0004
+  rotate: false
+  xy: 2, 24
+  size: 105, 102
+  orig: 106, 102
+  offset: 1, 0
+  index: -1
+wuqi01
+  rotate: false
+  xy: 134, 3
+  size: 29, 27
+  orig: 29, 27
+  offset: 0, 0
+  index: -1
+wuqi03
+  rotate: false
+  xy: 165, 5
+  size: 26, 25
+  orig: 26, 25
+  offset: 0, 0
+  index: -1
+wuqi04
+  rotate: true
+  xy: 109, 2
+  size: 28, 23
+  orig: 28, 23
+  offset: 0, 0
+  index: -1
+xbz_0001
+  rotate: false
+  xy: 904, 85
+  size: 45, 41
+  orig: 87, 89
+  offset: 8, 18
+  index: -1
+xbz_0002
+  rotate: true
+  xy: 776, 67
+  size: 59, 63
+  orig: 87, 89
+  offset: 7, 9
+  index: -1
+xbz_0003
+  rotate: true
+  xy: 361, 56
+  size: 70, 75
+  orig: 87, 89
+  offset: 4, 6
+  index: -1
+xbz_0004
+  rotate: false
+  xy: 282, 56
+  size: 77, 70
+  orig: 87, 89
+  offset: 3, 17
+  index: -1
+xbz_0005
+  rotate: false
+  xy: 708, 73
+  size: 66, 53
+  orig: 87, 89
+  offset: 3, 17
+  index: -1

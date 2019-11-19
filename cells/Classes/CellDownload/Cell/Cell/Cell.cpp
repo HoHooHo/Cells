@@ -1,3 +1,12 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "Cell.h"
 
 NS_CELL_BEGIN
@@ -6,12 +15,13 @@ Cell::Cell(const std::string& xmlName, const std::string& name, const std::strin
 :_xmlName(xmlName)
 ,_name(name)
 ,_md5(md5)
+,_localMD5("")
 ,_size(size)
 {
 	_md5Name = name + MD5_SUFFIX ;
 }
 
-Cell::Cell(const std::string& xmlName, std::map<std::string, std::string>& map)
+Cell::Cell(const std::string& xmlName, std::unordered_map<std::string, std::string>& map)
 {
 	init(xmlName, map) ;
 }
@@ -21,7 +31,7 @@ Cell::~Cell()
 
 }
 
-void Cell::init(const std::string& xmlName, std::map<std::string, std::string>& map)
+void Cell::init(const std::string& xmlName, std::unordered_map<std::string, std::string>& map)
 {
 	_xmlName = xmlName ;
 	_name = map["name"] ;

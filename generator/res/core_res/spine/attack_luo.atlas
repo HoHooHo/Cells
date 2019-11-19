@@ -1,0 +1,27 @@
+
+attack_luo.png
+size: 128,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+jinbi
+  rotate: false
+  xy: 2, 2
+  size: 38, 38
+  orig: 39, 38
+  offset: 1, 0
+  index: -1
+wjjinyan
+  rotate: true
+  xy: 42, 4
+  size: 36, 39
+  orig: 36, 39
+  offset: 0, 0
+  index: -1
+yxjinyan
+  rotate: false
+  xy: 83, 8
+  size: 41, 32
+  orig: 41, 32
+  offset: 0, 0
+  index: -1

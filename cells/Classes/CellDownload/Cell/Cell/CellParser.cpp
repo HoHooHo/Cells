@@ -1,51 +1,97 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "CellParser.h"
 
 NS_CELL_BEGIN
 
 const char* TAG_CELL = "cell" ;
-const char* TAG_NAME = "name" ;
-const char* TAG_MD5  = "md5"  ;
-const char* TAG_SIZE = "size" ;
+const char* TAG_CELLS = "cells" ;
+const char* TAG_VERSION = "version" ;
 
-CellParser::CellParser(CellQueue<Cell*>* cells)
+CellParser::CellParser(CellMap<std::string, Cell*>* cells, std::string* cppVersion, std::string* svnVersion)
 	:_cells(cells)
 	,_fileName("")
+	,_cppVersion(cppVersion)
+	,_svnVersion(svnVersion)
+	,_local(false)
 {
 
 }
 
-bool CellParser::parse(const char* filePath, const char* fileName)
+bool CellParser::parse(DownloadConig* config, const char* fileName)
 {
 	_fileName = fileName ;
-	std::string fullName = std::string(filePath) + std::string(fileName) ;
+
+	std::string srcFullName = cocos2d::FileUtils::getInstance()->fullPathForFilename(config->getSrcRoot() + std::string(fileName)) ;
+
+	std::string tempFullName = config->getDesRoot() + std::string(fileName) + TEMP_SUFFIX ;
 	cocos2d::SAXParser parser ;
 
 	if ( !parser.init("UTF-8") )
 	{
-		CELL_LOG("[Cells] CCSAXParser.init failed! when load file: %s", fullName);
+		CELL_LOG("[Cells] CCSAXParser.init failed! when load file: %s", tempFullName.c_str());
 		return false ;
 	}
 
 	parser.setDelegator(this) ;
+	bool bRet = parser.parse(tempFullName) ;
 
-	return parser.parse(fullName) ;
+	_local = true;
+
+	if (cocos2d::FileUtils::getInstance()->isFileExist(srcFullName))
+	{
+		bRet = parser.parse(srcFullName) ;
+	}
+
+	return bRet ;
 }
 
 
 void CellParser::startElement(void *ctx, const char *name, const char **atts)
 {
-	if ( strcmp(TAG_CELL, name) == 0 && (*atts) ) 
+	if (strcmp(TAG_CELLS, name) == 0 && (*atts))
 	{
-		std::map<std::string, std::string> attrMap ;
-		for (size_t i = 0; atts[i] && atts[i+1]; i+=2 )
+		if (!_local)
 		{
-			//CELL_LOG("key: %s", atts[i]) ;
-			//CELL_LOG("value: %s", atts[i+1]) ;
-			attrMap.insert( std::make_pair(atts[i], atts[i+1]) ) ;
+			*_cppVersion = atts[1] ;
+			*_svnVersion = atts[3] ;
 		}
-		Cell* cell = new Cell(_fileName, attrMap) ;
+	}
+	else if ( strcmp(TAG_CELL, name) == 0 && (*atts) ) 
+	{
+		if (!_local)
+		{
+			std::unordered_map<std::string, std::string> attrMap ;
+			for (size_t i = 0; atts[i] && atts[i+1]; i+=2 )
+			{
+				attrMap.insert( std::make_pair(atts[i], atts[i+1]) ) ;
+			}
+			Cell* cell = new Cell(_fileName, attrMap) ;
 
-		_cells->push(cell) ;
+			_cells->insert(cell->getName(), cell);
+		}
+		else
+		{
+			CellMap<std::string, Cell*>::iterator iter = _cells->find(atts[5]);
+			if (iter != _cells->end())
+			{
+				Cell* cell = iter->second;
+				cell->setLocalMD5(atts[1]);
+
+				if (cell->getMD5().compare(cell->getLocalMD5()) == 0)
+				{
+					_cells->erase(iter) ;
+					delete cell;
+				}
+			}
+		}
 	}
 }
 

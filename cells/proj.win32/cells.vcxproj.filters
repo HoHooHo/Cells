@@ -37,6 +37,9 @@
     <Filter Include="src\CellDownload\Utils">
       <UniqueIdentifier>{5d6e1909-5f54-4fac-90ec-1ec9715332f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Version">
+      <UniqueIdentifier>{f6d60c0b-dfa0-4877-9d03-fe4aacf82516}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="..\Classes\CellDownload\Utils\DirUtil.cpp">
       <Filter>src\CellDownload\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Version\Version.cpp">
+      <Filter>src\Version</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="..\Classes\CellDownload\Utils\DirUtil.h">
       <Filter>src\CellDownload\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Version\Version.h">
+      <Filter>src\Version</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

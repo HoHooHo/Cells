@@ -1,3 +1,12 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #pragma once
 
 #include "../../Utils/CellMacro.h"
@@ -11,6 +20,8 @@ class CellDownloadWorker : public CellWorker
 {
 private:
 	FILE* _fp ;
+	std::string _desFileName ;
+	std::string _desFileNameTemp ;
 
 private:
 	Downloader* _dowloader ;
@@ -27,7 +38,7 @@ private:
 	void removeMD5File(const char* file) ;
 
 	void startDownload(Cell* cell, bool brokenResume) ;
-	void finishDownload(Cell* cell) ;
+	void finishDownload(Cell* cell, bool result) ;
 
 	bool needBrokenResume(Cell* cell) ;
 

@@ -1,3 +1,12 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "CellWorker.h"
 
 NS_CELL_BEGIN
@@ -41,6 +50,8 @@ void CellWorker::finishThread()
 		CELL_LOG(" ****    work thread : %s finish    **** ", s.str().c_str()) ;
 
 		delete _workThread ;
+
+		_workThread = nullptr ;
 	}
 }
 

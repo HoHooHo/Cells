@@ -1,6 +1,17 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #pragma once
 #include <string>
-#include <map>
+#include <queue>
+#include <mutex>
+#include <unordered_map>
 #include "../../Utils/CellMacro.h"
 
 NS_CELL_BEGIN
@@ -68,7 +79,7 @@ public:
 	typedef typename _map_t::key_type		key_type ;
 	typedef typename _map_t::mapped_type	mapped_type ;
 	typedef typename _map_t::iterator		iterator ;
-	typedef typename _map_t::reverse_iterator	reverse_iterator;
+//	typedef typename _map_t::reverse_iterator	reverse_iterator;
 
 	inline bool empty()
 	{
@@ -88,6 +99,11 @@ public:
 		return _map.size() ;
 	}
 
+	inline iterator find(const key_type& k)
+	{
+		return _map.find(k);
+	}
+
 	inline iterator begin()
 	{
 		return _map.begin();
@@ -98,15 +114,15 @@ public:
 		return _map.end();
 	}
 
-	inline reverse_iterator rbegin()
-	{
-		return _map.rbegin();
-	}
-
-	inline reverse_iterator rend()
-	{
-		return _map.rend();
-	}
+//	inline reverse_iterator rbegin()
+//	{
+//		return _map.rbegin();
+//	}
+//
+//	inline reverse_iterator rend()
+//	{
+//		return _map.rend();
+//	}
 
 	inline void insert(const key_type& k, const mapped_type& v)
 	{

@@ -1,0 +1,146 @@
+
+adventure.png
+size: 512,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+light
+  rotate: false
+  xy: 2, 45
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+next-g0001
+  rotate: false
+  xy: 168, 90
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0002
+  rotate: false
+  xy: 228, 90
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0003
+  rotate: false
+  xy: 288, 90
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0004
+  rotate: false
+  xy: 348, 90
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0005
+  rotate: false
+  xy: 408, 90
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0006
+  rotate: false
+  xy: 84, 35
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0007
+  rotate: true
+  xy: 468, 67
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0008
+  rotate: false
+  xy: 158, 53
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0009
+  rotate: false
+  xy: 218, 53
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0010
+  rotate: false
+  xy: 278, 53
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0011
+  rotate: false
+  xy: 338, 53
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0012
+  rotate: false
+  xy: 398, 53
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0013
+  rotate: false
+  xy: 144, 16
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-g0014
+  rotate: false
+  xy: 204, 16
+  size: 58, 35
+  orig: 58, 35
+  offset: 0, 0
+  index: -1
+next-map
+  rotate: false
+  xy: 2, 2
+  size: 77, 41
+  orig: 77, 41
+  offset: 0, 0
+  index: -1
+sword
+  rotate: false
+  xy: 264, 8
+  size: 44, 43
+  orig: 44, 43
+  offset: 0, 0
+  index: -1
+xiaodian
+  rotate: false
+  xy: 310, 37
+  size: 21, 14
+  orig: 21, 14
+  offset: 0, 0
+  index: -1
+zhandou-zs
+  rotate: false
+  xy: 84, 98
+  size: 82, 27
+  orig: 82, 27
+  offset: 0, 0
+  index: -1
+zhizhen
+  rotate: true
+  xy: 84, 72
+  size: 24, 72
+  orig: 24, 72
+  offset: 0, 0
+  index: -1

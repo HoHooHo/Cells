@@ -81,26 +81,32 @@ void foo(WORK_STATE workState, const std::string& fileName, bool bRet, int nowCo
 {
 	switch (workState)
 	{
-	case WORK_STATE_00_READY_CHECK:
-		CCLOG("************WORK_STATE_00_READY_CHECK") ;
+	case WORK_STATE_00_NONE:
+		CCLOG("************WORK_STATE_00_NONE") ;
 		break;
-	case WORK_STATE_01_CHECKING:
-		CCLOG("************WORK_STATE_01_CHECKING  %d / %d", nowCount, totalCount) ;
+	case WORK_STATE_01_READY_CHECK:
+		CCLOG("************WORK_STATE_01_READY_CHECK") ;
 		break;
-	case WORK_STATE_02_CHECK_FINISH:
-		CCLOG("************WORK_STATE_02_CHECK_FINISH  %d / %d", nowCount, totalCount) ;
+	case WORK_STATE_02_CHECKING:
+		CCLOG("************WORK_STATE_02_CHECKING  %d / %d", nowCount, totalCount) ;
 		break;
-	case WORK_STATE_04_DOWNLOADING:
-		CCLOG("************WORK_STATE_04_DOWNLOADING  %d / %d", nowCount, totalCount) ;
+	case WORK_STATE_03_CHECK_FINISH:
+		CCLOG("************WORK_STATE_03_CHECK_FINISH  %d / %d", nowCount, totalCount) ;
 		break;
-	case WORK_STATE_05_DOWNLOAD_ERROR:
-		CCLOG("************WORK_STATE_05_DOWNLOAD_ERROR  %d / %d", nowCount, totalCount) ;
+	case WORK_STATE_04_READY_DOWNLOAD:
+		CCLOG("************WORK_STATE_04_READY_DOWNLOAD  %d", totalSize) ;
 		break;
-	case WORK_STATE_06_ALL_FINISH:
-		CCLOG("************WORK_STATE_06_ALL_FINISH  %d / %d", nowCount, totalCount) ;
+	case WORK_STATE_05_DOWNLOADING:
+		CCLOG("************WORK_STATE_05_DOWNLOADING  %d / %d", nowCount, totalCount) ;
 		break;
-	case WORK_STATE_07_WAIT:
-		CCLOG("************WORK_STATE_07_WAIT") ;
+	case WORK_STATE_06_DOWNLOAD_ERROR:
+		CCLOG("************WORK_STATE_06_DOWNLOAD_ERROR  %d / %d", nowCount, totalCount) ;
+		break;
+	case WORK_STATE_07_ALL_FINISH:
+		CCLOG("************WORK_STATE_07_ALL_FINISH  %d / %d", nowCount, totalCount) ;
+		break;
+	case WORK_STATE_08_WAIT:
+		CCLOG("************WORK_STATE_08_WAIT") ;
 		break;
 	}
 	
@@ -113,7 +119,7 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 	m++ ;
 	if (m == 1)
 	{
-		cdm = new CellDownloadManager("127.0.0.1/celltest", 3, "E:/project/github/Cells/cells/Resources", FileUtils::getInstance()->getWritablePath() + "Resources") ;
+		cdm = new CellDownloadManager("127.0.0.1/celltest", 3, "E:/project/github/Cells/cells/Resources", FileUtils::getInstance()->getWritablePath() + "Resources", "?rnd=rand123") ;
 		
 		cdm->registerObserver(DownloadObserverFunctor(foo)) ;
 		cdm->postWork("cells.xml") ;

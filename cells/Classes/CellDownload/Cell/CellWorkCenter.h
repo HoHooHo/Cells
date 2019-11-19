@@ -1,3 +1,12 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #pragma once
 #include "../Utils/CellMacro.h"
 #include "../Download/DownloadConig.h"
@@ -7,8 +16,10 @@
 
 NS_CELL_BEGIN
 
-typedef std::function<void(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount)> CellCheckObserverFunctor ;
+typedef std::function<void(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount, double totalSize)> CellCheckObserverFunctor ;
 typedef std::function<void(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize)> CellDownloadObserverFunctor ;
+typedef std::function<void(const std::string& fileName)> DownloadIdxErrorObserverFunctor ;
+#define CELL_DOWNLOAD_IDX_ERR_OBSERVER_CREATER(__selector__,__target__) std::bind(&__selector__,__target__, std::placeholders::_1)
 
 class CellWorkCenter
 {
@@ -16,7 +27,7 @@ private:
 	DownloadConig* _config ;
 	int _workThreadCount ;
 	CellQueue<std::string> _fileNames ;
-	std::map<std::string, int> _downloadCount ;
+	std::unordered_map<std::string, int> _downloadCount ;
 	CellHandler* _cellHandler ;
 
 	Downloader* _dowloader ;
@@ -38,11 +49,13 @@ private:
 	double _newTotalSize ;
 
 private:
+	CellForceUpdateObserverFunctor  _forceUpdateObserver ;
 	CellCheckObserverFunctor _checkingObserver ;
 	CellCheckObserverFunctor _allCheckedObserver ;
 	CellDownloadObserverFunctor _downloadingObserver ;
 	CellDownloadObserverFunctor _allDownloadedObserver ;
 	CellDownloadObserverFunctor _downloadErrorObserver ;
+	DownloadIdxErrorObserverFunctor _downloadIdxErrorObserver ;
 
 private:
 	bool download(const std::string& file, const std::string& fileName) ;
@@ -75,7 +88,9 @@ public:
 						  const CellCheckObserverFunctor& allCheckedObserver, 
 						  const CellDownloadObserverFunctor& downloadingObserver, 
 						  const CellDownloadObserverFunctor& allDownloadedObserver, 
-						  const CellDownloadObserverFunctor& downloadErrorObserver
+						  const CellDownloadObserverFunctor& downloadErrorObserver, 
+						  const DownloadIdxErrorObserverFunctor& downloadIdxErrorObserver,
+						  const CellForceUpdateObserverFunctor& forceUpdateObserver
 						  ) ;
 
 	int getWorkThreadCount() ;

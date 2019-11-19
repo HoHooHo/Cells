@@ -1,3 +1,12 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "Downloader.h"
 #include <assert.h>
 
@@ -6,9 +15,11 @@ NS_CELL_BEGIN
 const double BYTES_TO_FLUSH  = 1024 * 512 ;
 static char s_curl_error_buffer[CURL_ERROR_SIZE] ;
 
-Downloader::Downloader()
+Downloader::Downloader(long connectTimeOut, long readTimeOut)
 	:_curlHandle(nullptr)
 	,_fp(nullptr)
+	,_connectTimeOut(connectTimeOut)
+	,_readTimeOut(readTimeOut)
 {
 	_curlHandle = curl_easy_init() ;
 
@@ -45,8 +56,14 @@ void Downloader::init()
 
 	//curl_easy_setopt(_curlHandle, CURLOPT_URL, "www.baidu.com") ;
 
-	curl_easy_setopt(_curlHandle, CURLOPT_CONNECTTIMEOUT, 50L) ;
-	curl_easy_setopt(_curlHandle, CURLOPT_TIMEOUT, 100L) ;
+	curl_easy_setopt(_curlHandle, CURLOPT_CONNECTTIMEOUT, _connectTimeOut) ;
+	curl_easy_setopt(_curlHandle, CURLOPT_TIMEOUT, _readTimeOut) ;
+
+
+	curl_easy_setopt(_curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+	curl_easy_setopt(_curlHandle, CURLOPT_SSL_VERIFYHOST, false);
+
+	curl_easy_setopt(_curlHandle, CURLOPT_FOLLOWLOCATION, 1L) ;
 
 	curl_easy_setopt(_curlHandle, CURLOPT_NOSIGNAL, 1L) ;
 
@@ -59,6 +76,14 @@ void Downloader::init()
 
 	curl_easy_setopt(_curlHandle, CURLOPT_ERRORBUFFER, s_curl_error_buffer) ;
 
+}
+
+void Downloader::reset()
+{
+	curl_easy_cleanup(_curlHandle) ;
+	_curlHandle = curl_easy_init() ;
+
+	init() ;
 }
 
 bool Downloader::download(const char* url, FILE* fp, bool brokenResume)

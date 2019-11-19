@@ -1,10 +1,17 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "CellWorkCenter.h"
 #include <thread>
 #include "../Utils/DirUtil.h"
 
 NS_CELL_BEGIN
-
-	const char* TEMP_SUFFIX = ".temp" ;
 
 CellWorkCenter::CellWorkCenter(DownloadConig* config, int workThreadCount)
 	:_config(config)
@@ -22,6 +29,8 @@ CellWorkCenter::CellWorkCenter(DownloadConig* config, int workThreadCount)
 	,_downloadingObserver(nullptr)
 	,_allDownloadedObserver(nullptr)
 	,_downloadErrorObserver(nullptr)
+	,_downloadIdxErrorObserver(nullptr)
+	,_forceUpdateObserver(nullptr)
 {
 	_dowloader = new Downloader() ;
 }
@@ -49,13 +58,14 @@ void CellWorkCenter::onCheck(Cell* cell, bool bRet)
 {
 	//CELL_LOG("***   CellWorkCenter::onCheck   ***") ;
 
+	if (_cellHandler->getCellsTotalCount() == 0)
+	{
+		onCheckFinish(nullptr, false, 0, 0) ;
+		return;
+	}
+
 	_checkedCount++ ;
 	//CELL_LOG("%d / %d", _checkedCount , _cellHandler->getCellsTotalCount() ) ;
-
-	if (_checkingObserver)
-	{
-		_checkingObserver(cell, bRet, _checkedCount, _cellHandler->getCellsTotalCount()) ;
-	}
 
 	if ( bRet )
 	{
@@ -69,6 +79,11 @@ void CellWorkCenter::onCheck(Cell* cell, bool bRet)
 		_checkedOkCells.push(cell) ;
 	}
 
+	if (_checkingObserver)
+	{
+		_checkingObserver(cell, bRet, _checkedCount, _cellHandler->getCellsTotalCount(), _newTotalSize) ;
+	}
+
 	if (_checkedCount == _cellHandler->getCellsTotalCount())
 	{
 		onCheckFinish(cell, bRet, _checkedCount, _cellHandler->getCellsTotalCount()) ;
@@ -78,11 +93,16 @@ void CellWorkCenter::onCheck(Cell* cell, bool bRet)
 void CellWorkCenter::onCheckFinish(Cell* cell, bool bRet, int nowCount, int totalCount)
 {
 	CELL_LOG("*** check finish  ***") ;
+	if (cell)
+	{
+		renameHash(cell->getXMLName(), _downloadCount[cell->getXMLName()]) ;
+	}
+
 	if (_fileNames.empty())
 	{
 		if (_allCheckedObserver)
 		{
-			_allCheckedObserver(cell, bRet, nowCount, totalCount) ;
+			_allCheckedObserver(cell, bRet, nowCount, totalCount, _newTotalSize) ;
 		}
 	}else
 	{
@@ -151,7 +171,7 @@ void CellWorkCenter::initHandler()
 	if ( !_cellHandler )
 	{
 		_cellHandler = new CellHandler(_config, _workThreadCount) ;
-		_cellHandler->registerObserver( CELL_OBSERVER_CREATER( CellWorkCenter::onCheck, this ), CELL_OBSERVER_CREATER( CellWorkCenter::onDownload, this ) ) ;
+		_cellHandler->registerObserver( _forceUpdateObserver, CELL_OBSERVER_CREATER( CellWorkCenter::onCheck, this ), CELL_OBSERVER_CREATER( CellWorkCenter::onDownload, this ) ) ;
 	}
 }
 
@@ -177,14 +197,15 @@ bool CellWorkCenter::download(const std::string& file, const std::string& fileNa
 
 		startDownload(file) ;
 
-		std::string fitlURL = url + fileName ;
+		std::string fileURL = url + fileName + _config->getRandom() ;
 
-		bRet = _dowloader->download(fitlURL.c_str(), _fp, false) ;
+		bRet = _dowloader->download(fileURL.c_str(), _fp, false) ;
 
 		finishDownload(file) ;
 
 		if (bRet)
 		{
+			_config->urlOpt(url) ;
 			break ;
 		}
 	}
@@ -234,12 +255,14 @@ bool CellWorkCenter::renameHash(const std::string& xmlName, int count)
 	{
 		std::string desRoot = _config->getDesRoot() ;
 		std::string hashFileName = xmlName + MD5_SUFFIX ;
-		std::string hashFile = desRoot + hashFileName ;
-		std::string hashTempFile = hashFile + TEMP_SUFFIX ;
+//		std::string hashFile = desRoot + hashFileName ;
+		std::string hashTempFileName = hashFileName + TEMP_SUFFIX ;
+		std::string tempFileName = xmlName + TEMP_SUFFIX ;
 
-		if (DirUtil::getInstance()->isFileExist(hashTempFile.c_str()))
+		if (DirUtil::getInstance()->isFileExist( (desRoot + hashTempFileName).c_str(), true))
 		{
-			DirUtil::getInstance()->renameFile(hashTempFile, hashFile) ;
+			DirUtil::getInstance()->renameFile(desRoot, hashTempFileName, hashFileName) ;
+			DirUtil::getInstance()->renameFile(desRoot, tempFileName, xmlName) ;
 			bRet = true ;
 		}
 	}
@@ -249,7 +272,7 @@ bool CellWorkCenter::renameHash(const std::string& xmlName, int count)
 
 void CellWorkCenter::renameAllHash()
 {
-	for (std::map<std::string, int>::iterator it = _downloadCount.begin(); it != _downloadCount.end(); ++it)
+	for (std::unordered_map<std::string, int>::iterator it = _downloadCount.begin(); it != _downloadCount.end(); ++it)
 	{
 		renameHash(it->first, it->second) ;
 	}
@@ -262,15 +285,43 @@ void CellWorkCenter::doWork(const std::string& fileName)
 	if (update)
 	{
 		std::string desRoot = _config->getDesRoot() ;
+		/*
+		std::string basename = fileName ;
+
+		size_t found = fileName.find_last_of(".");
+
+		if (std::string::npos != found)
+		{
+			basename = fileName.substr(0, found);
+		}
+
+		std::string zipname = basename + ".zip" ;
+		std::string zipfile = desRoot + zipname ;
+		*/
+
 		std::string file = desRoot + fileName ;
+		std::string tempFile = file + TEMP_SUFFIX ;
 
 		_downloadCount.insert(std::make_pair(fileName, 0)) ;
 
-		bool bRet = download(file, fileName) ;
+		//bool bRet = download(zipfile, zipname) ;
+		//bRet = bRet && DirUtil::getInstance()->decompress(zipfile) ;
+
+		//if (!bRet)
+		//{
+			bool bRet = download(tempFile, fileName) ;
+		//}
+
 		if (bRet)
 		{
 			initHandler() ;
-			_cellHandler->postCheckWork(desRoot.c_str(), fileName.c_str()) ;
+			_cellHandler->postCheckWork(_config, fileName.c_str()) ;
+		}else
+		{
+			if (_downloadIdxErrorObserver)
+			{
+				_downloadIdxErrorObserver(fileName) ;
+			}
 		}
 	}else
 	{
@@ -284,7 +335,9 @@ void CellWorkCenter::registerObserver(const CellCheckObserverFunctor& checkingOb
 									  const CellCheckObserverFunctor& allCheckedObserver, 
 									  const CellDownloadObserverFunctor& downloadingObserver, 
 									  const CellDownloadObserverFunctor& allDownloadedObserver, 
-									  const CellDownloadObserverFunctor& downloadErrorObserver 
+									  const CellDownloadObserverFunctor& downloadErrorObserver, 
+									  const DownloadIdxErrorObserverFunctor& downloadIdxErrorObserver,
+									  const CellForceUpdateObserverFunctor& forceUpdateObserver
 									  )
 {
 	_checkingObserver = checkingObserver ;
@@ -293,6 +346,9 @@ void CellWorkCenter::registerObserver(const CellCheckObserverFunctor& checkingOb
 	_downloadingObserver = downloadingObserver ;
 	_allDownloadedObserver = allDownloadedObserver ;
 	_downloadErrorObserver = downloadErrorObserver ;
+	_downloadIdxErrorObserver = downloadIdxErrorObserver ;
+
+	_forceUpdateObserver = forceUpdateObserver ;
 }
 
 int CellWorkCenter::getWorkThreadCount()
@@ -308,7 +364,7 @@ int CellWorkCenter::getWorkThreadCount()
 void CellWorkCenter::postCheckWork(const char* fileName, WORK_STATE workState)
 {
 	_fileNames.push(fileName) ;
-	if (workState == WORK_STATE_00_READY_CHECK || workState == WORK_STATE_02_CHECK_FINISH || workState == WORK_STATE_03_READY_DOWNLOAD)
+	if (workState == WORK_STATE_01_READY_CHECK || workState == WORK_STATE_03_CHECK_FINISH || workState == WORK_STATE_04_READY_DOWNLOAD)
 	{
 		doWork(_fileNames.pop()) ;
 	}
@@ -317,7 +373,7 @@ void CellWorkCenter::postCheckWork(const char* fileName, WORK_STATE workState)
 void CellWorkCenter::postDownloadWork(WORK_STATE workState)
 {
 	CELL_LOG("***  file_count: %d  ***  file_size: %lf  ***", _newTotalCount , _newTotalSize ) ;
-	if (workState == WORK_STATE_03_READY_DOWNLOAD && _downloadCells.empty())
+	if (workState == WORK_STATE_04_READY_DOWNLOAD && _downloadCells.empty())
 	{
 		this->onDownloadFinish(nullptr, true, 0, 0, 0, 0) ;
 	}else 

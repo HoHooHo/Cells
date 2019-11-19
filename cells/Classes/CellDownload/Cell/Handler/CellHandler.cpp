@@ -1,12 +1,23 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "CellHandler.h"
 #include <thread>
 #include "../Cell/CellParser.h"
 #include "../CellWorker/CellWorkerFactory.h"
+#include "../../../Version/Version.h"
 
 NS_CELL_BEGIN
 
 CellHandler::CellHandler(DownloadConig* config, int workThreadCount)
 	:_config(config)
+	,_forceUpdateObserver(nullptr)
 	,_checkObserver(nullptr)
 	,_downloadObserver(nullptr)
 	,_cellTotalCount(0)
@@ -19,11 +30,13 @@ CellHandler::~CellHandler()
 {
 	delete _factory ;
 
-	while ( !_cellsQueue.empty() )
+
+	for (CellMap<std::string, Cell*>::iterator it = _cellsMap.begin(); it != _cellsMap.end(); it++)
 	{
-		Cell* cell = _cellsQueue.pop() ;
-		delete cell ;
+		delete it->second;
 	}
+
+	_cellsMap.clear();
 
 	while ( !_postCellsQueue.empty() )
 	{
@@ -51,6 +64,11 @@ void CellHandler::onDownload(Cell* cell, bool bRet)
 	}
 }
 
+void CellHandler::registerForceUpdateObserver(const CellForceUpdateObserverFunctor& forceUpdateObserver)
+{
+	_forceUpdateObserver = forceUpdateObserver ;
+}
+
 void CellHandler::registerCheckObserver(const CellObserverFunctor& checkObserver)
 {
 	_checkObserver = checkObserver ;
@@ -61,28 +79,54 @@ void CellHandler::registerDownloadObserver(const CellObserverFunctor& downloadOb
 	_downloadObserver = downloadObserver ;
 }
 
-void CellHandler::registerObserver(const CellObserverFunctor& checkObserver, const CellObserverFunctor& downloadObserver)
+void CellHandler::registerObserver(const CellForceUpdateObserverFunctor& forceUpdateObserver, const CellObserverFunctor& checkObserver, const CellObserverFunctor& downloadObserver)
 {
+	registerForceUpdateObserver(forceUpdateObserver) ;
 	registerCheckObserver(checkObserver) ;
 	registerDownloadObserver(downloadObserver) ;
 }
 
-void CellHandler::parse(const char* filePath, const char* fileName)
+std::string CellHandler::parse(DownloadConig* config, const char* fileName)
 {
-	CellParser parser(&_cellsQueue) ;
-	parser.parse(filePath, fileName) ;
-	_cellTotalCount += _cellsQueue.size() ;
+	std::string cppVersion ;
+	std::string svnVersion ;
+	CellParser parser(&_cellsMap, &cppVersion, &svnVersion) ;
+
+	parser.parse(config, fileName) ;
+
+	_config->setCppVersion(cppVersion) ;
+	_config->setSvnVersion(svnVersion) ;
+
+	_cellTotalCount += _cellsMap.size() ;
+
+	return cppVersion ;
 }
 
-void CellHandler::postCheckWork(const char* filePath, const char* fileName)
+void CellHandler::postCheckWork(DownloadConig* config, const char* fileName)
 {
-	parse(filePath, fileName) ;
+	std::string cppVersion = parse(config, fileName) ;
 
-	while ( !_cellsQueue.empty() )
+	if (Version::getCPPVersion() != atoi(cppVersion.c_str()))
 	{
-		Cell* cell = _cellsQueue.pop() ;
-		_postCellsQueue.push(cell) ;
-		_factory->postCheckWork(cell) ;
+		if (_forceUpdateObserver)
+		{
+			_forceUpdateObserver(cppVersion) ;
+		}
+	}else
+	{
+		if (_cellTotalCount == 0)
+		{
+			onCheck(nullptr, false);
+		}else
+		{
+			for (CellMap<std::string, Cell*>::iterator iter = _cellsMap.begin(); iter != _cellsMap.end(); iter++)
+			{
+				_postCellsQueue.push(iter->second) ;
+				_factory->postCheckWork(iter->second) ;
+			}
+
+			_cellsMap.clear();
+		}
 	}
 }
 

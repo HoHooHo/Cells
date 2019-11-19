@@ -1,9 +1,18 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "QuickMD5.h"
 #include <iostream>
 #include "../Utils/CellPlatform.h"
 
 extern "C" {
-#include "md5/md5.h"
+#include "MD5/md5.h"
 }
 
 NS_CELL_BEGIN
@@ -22,11 +31,29 @@ QuickMD5* QuickMD5::getInstance()
 
 const std::string QuickMD5::MD5File(const char* path)
 {
-	cocos2d::Data data = cocos2d::FileUtils::getInstance()->getDataFromFile(path) ;
-	return MD5String((void*)(data.getBytes()), data.getSize()) ;
+	//std::unique_lock<std::mutex> lock(_mutex) ;
+	std::string fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(path) ;
+	CELL_LOG("QuickMD5::MD5File:  file = %s", fullPath.c_str()) ;
+	cocos2d::Data data = cocos2d::FileUtils::getInstance()->getDataFromFile( fullPath ) ;
+	const std::string md5 = _MD5String((void*)(data.getBytes()), data.getSize()) ;
+
+	CELL_LOG("QuickMD5::MD5File:  file = %s   md5 = %s", fullPath.c_str(), md5.c_str()) ;
+	return md5 ;
+}
+
+const std::string QuickMD5::MD5String(const std::string str)
+{
+	return _MD5String((void*)str.c_str(), str.size()) ;
 }
 
 
+const std::string QuickMD5::SimpleMD5File(const char* path){
+	return MD5File(path).substr(8, 16) ;
+}
+
+const std::string QuickMD5::SimpleMD5String(const std::string str){
+	return MD5String(str).substr(8, 16);
+}
 
 void QuickMD5::MD5(void* input, int inputLength, unsigned char* output)
 {
@@ -36,7 +63,7 @@ void QuickMD5::MD5(void* input, int inputLength, unsigned char* output)
 	MD5_Final(output, &ctx);
 }
 
-const std::string QuickMD5::MD5String(void* input, int inputLength)
+const std::string QuickMD5::_MD5String(void* input, int inputLength)
 {
     unsigned char buffer[MD5_BUFFER_LENGTH];
     MD5(static_cast<void*>(input), inputLength, buffer);

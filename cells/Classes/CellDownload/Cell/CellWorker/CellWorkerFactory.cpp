@@ -1,6 +1,16 @@
+/******************************************************************************
+*                                                                             *
+*  Copyright (C) 2014 ZhangXiaoYi                                             *
+*                                                                             *
+*  @author   ZhangXiaoYi                                                      *
+*  @date     2014-11-05                                                       *
+*                                                                             *
+*****************************************************************************/
+
 #include "CellWorkerFactory.h"
 #include "CellCheckWorker.h"
 #include "CellDownloadWorker.h"
+#include "../../MD5/QuickMD5.h"
 
 NS_CELL_BEGIN
 	
@@ -73,6 +83,7 @@ void CellWorkerFactory::destroyCellMap(CellMap<std::string, Cell*>& cellMap)
 
 void CellWorkerFactory::init()
 {
+	QuickMD5::getInstance() ;
 	for (int i = 0; i < _workerCount; i++)
 	{
 		CellCheckWorker* checkWork = new CellCheckWorker(_config) ;
@@ -111,6 +122,7 @@ void CellWorkerFactory::finishThread()
 		CELL_LOG(" ****    WorkerFactory thread : %s finish    **** ", s.str().c_str()) ;
 
 		delete _dispatchThread ;
+		_dispatchThread = nullptr ;
 	}
 }
 
