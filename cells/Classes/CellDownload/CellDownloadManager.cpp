@@ -52,6 +52,7 @@ void CellDownloadManager::init(const std::vector<std::string>& urlVector, const 
 	_totalCount = 0 ;
 	_nowSize = 0.0 ;
 	_totalSize = 0.0 ;
+	_restartKeyWord = "";
 
 	NS_CELL::DirUtil::getInstance()->setRoot(srcRoot, desRoot);
 
@@ -118,7 +119,7 @@ void CellDownloadManager::onDownloading(NS_CELL::Cell* cell, bool bRet, int nowC
 	_nowSize = nowSize ;
 	_totalSize = totalSize ;
 	//CELL_LOG("CellDownloadManager::onDownloading   %d / %d    %lf.2 / %lf.2", nowCount, totalCount, nowSize, totalSize) ;
-	if (_restartObserver && _fileName.find("loadshell") != std::string::npos)
+	if (_restartKeyWord.size() > 0 && _restartObserver && _fileName.find(_restartKeyWord) != std::string::npos)
 	{
 		_restartObserver() ;
 	}

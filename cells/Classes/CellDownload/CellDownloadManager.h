@@ -55,6 +55,8 @@ private:
 	double _nowSize ;
 	double _totalSize ;
 
+	std::string _restartKeyWord;
+
 public:
 	/* 
 	in fact, all count of the work thread is (workThreadCount * 2 + 1) when it's working,
@@ -79,6 +81,9 @@ public:
 	void registerIdxErrorObserver(const DownloadErrorObserverFunctor& observer) ;
 	void registerRestartObserver(const DownloadRestartObserverFunctor& observer) ;
 	void registerForceUpdateObserver(const CellForceUpdateObserverFunctor& observer) ;
+
+
+	void setRestartKeyWord(const char* keyWord) { _restartKeyWord = keyWord  ; } ;
 
 private:
 	void init(const std::vector<std::string>& urlVector, const std::string& srcRoot, const std::string& desRoot, const std::string& randomValue, int workThreadCount) ;
