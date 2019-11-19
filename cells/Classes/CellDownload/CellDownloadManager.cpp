@@ -245,7 +245,7 @@ void CellDownloadManager::registerRestartObserver(const DownloadRestartObserverF
 	_restartObserver = observer ;
 }
 
-void CellDownloadManager::registerForceUpdateObserver(const CellForceUpdateObserverFunctor& observer)
+void CellDownloadManager::registerForceUpdateObserver(const DownloadForceUpdateObserverFunctor& observer)
 {
 	_forceUpdateObserver = observer ;
 }

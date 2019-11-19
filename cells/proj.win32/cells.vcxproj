@@ -164,7 +164,6 @@ xcopy /Y /Q "$(EngineRoot)external\websockets\prebuilt\win32\*.*" "$(OutDir)"</C
     <ClInclude Include="..\Classes\CellDownload\Cell\CellWorker\CellDownloadWorker.h" />
     <ClInclude Include="..\Classes\CellDownload\Cell\CellWorker\CellWorker.h" />
     <ClInclude Include="..\Classes\CellDownload\Cell\CellWorker\CellWorkerFactory.h" />
-    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorkState.h" />
     <ClInclude Include="..\Classes\CellDownload\Cell\Cell\Cell.h" />
     <ClInclude Include="..\Classes\CellDownload\Cell\Cell\CellContainer.h" />
     <ClInclude Include="..\Classes\CellDownload\Cell\Cell\CellParser.h" />

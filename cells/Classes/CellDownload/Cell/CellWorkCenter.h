@@ -12,14 +12,11 @@
 #include "../Download/DownloadConig.h"
 #include "../Download/Downloader.h"
 #include "Handler/CellHandler.h"
-#include "CellWorkState.h"
 
 NS_CELL_BEGIN
 
 typedef std::function<void(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount, double totalSize)> CellCheckObserverFunctor ;
 typedef std::function<void(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize)> CellDownloadObserverFunctor ;
-typedef std::function<void(const std::string& fileName)> DownloadIdxErrorObserverFunctor ;
-#define CELL_DOWNLOAD_IDX_ERR_OBSERVER_CREATER(__selector__,__target__) std::bind(&__selector__,__target__, std::placeholders::_1)
 
 class CellWorkCenter
 {
@@ -49,13 +46,13 @@ private:
 	double _newTotalSize ;
 
 private:
-	CellForceUpdateObserverFunctor  _forceUpdateObserver ;
 	CellCheckObserverFunctor _checkingObserver ;
 	CellCheckObserverFunctor _allCheckedObserver ;
 	CellDownloadObserverFunctor _downloadingObserver ;
 	CellDownloadObserverFunctor _allDownloadedObserver ;
 	CellDownloadObserverFunctor _downloadErrorObserver ;
-	DownloadIdxErrorObserverFunctor _downloadIdxErrorObserver ;
+	DownloadErrorObserverFunctor _downloadIdxErrorObserver ;
+	DownloadForceUpdateObserverFunctor  _forceUpdateObserver ;
 
 private:
 	bool download(const std::string& file, const std::string& fileName) ;
@@ -89,8 +86,8 @@ public:
 						  const CellDownloadObserverFunctor& downloadingObserver, 
 						  const CellDownloadObserverFunctor& allDownloadedObserver, 
 						  const CellDownloadObserverFunctor& downloadErrorObserver, 
-						  const DownloadIdxErrorObserverFunctor& downloadIdxErrorObserver,
-						  const CellForceUpdateObserverFunctor& forceUpdateObserver
+						  const DownloadErrorObserverFunctor& downloadIdxErrorObserver,
+						  const DownloadForceUpdateObserverFunctor& forceUpdateObserver
 						  ) ;
 
 	int getWorkThreadCount() ;

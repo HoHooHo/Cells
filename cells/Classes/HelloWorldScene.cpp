@@ -1,8 +1,6 @@
 #include "HelloWorldScene.h"
 USING_NS_CC;
 
-#include "CellDownload/CellDownloadManager.h"
-
 Scene* HelloWorld::createScene()
 {
     // 'scene' is an autorelease object
@@ -112,6 +110,41 @@ void foo(WORK_STATE workState, const std::string& fileName, bool bRet, int nowCo
 	
 }
 
+void HelloWorld::onWorking(WORK_STATE workState, const std::string& fileName, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize)
+{
+	switch (workState)
+	{
+	case WORK_STATE_00_NONE:
+		CCLOG("************WORK_STATE_00_NONE") ;
+		break;
+	case WORK_STATE_01_READY_CHECK:
+		CCLOG("************WORK_STATE_01_READY_CHECK") ;
+		break;
+	case WORK_STATE_02_CHECKING:
+		CCLOG("************WORK_STATE_02_CHECKING  %d / %d", nowCount, totalCount) ;
+		break;
+	case WORK_STATE_03_CHECK_FINISH:
+		CCLOG("************WORK_STATE_03_CHECK_FINISH  %d / %d", nowCount, totalCount) ;
+		break;
+	case WORK_STATE_04_READY_DOWNLOAD:
+		CCLOG("************WORK_STATE_04_READY_DOWNLOAD  %d", totalSize) ;
+		break;
+	case WORK_STATE_05_DOWNLOADING:
+		CCLOG("************WORK_STATE_05_DOWNLOADING  %d / %d", nowCount, totalCount) ;
+		break;
+	case WORK_STATE_06_DOWNLOAD_ERROR:
+		CCLOG("************WORK_STATE_06_DOWNLOAD_ERROR  %d / %d", nowCount, totalCount) ;
+		break;
+	case WORK_STATE_07_ALL_FINISH:
+		CCLOG("************WORK_STATE_07_ALL_FINISH  %d / %d", nowCount, totalCount) ;
+		break;
+	case WORK_STATE_08_WAIT:
+		CCLOG("************WORK_STATE_08_WAIT") ;
+		break;
+	}
+
+}
+
 int m = 0 ;
 
 void HelloWorld::menuCloseCallback(Ref* pSender)
@@ -121,7 +154,8 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 	{
 		cdm = new CellDownloadManager("127.0.0.1/celltest", 3, "E:/project/github/Cells/cells/Resources", FileUtils::getInstance()->getWritablePath() + "Resources", "?rnd=rand123") ;
 		
-		cdm->registerObserver(DownloadObserverFunctor(foo)) ;
+		//cdm->registerObserver(DownloadObserverFunctor(foo)) ;
+		cdm->registerObserver(DOWNLOAD_OBSERVER_CREATER(HelloWorld::onWorking, this));
 		cdm->postWork("cells.xml") ;
 
 	}else if(m == 2)

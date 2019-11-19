@@ -3,6 +3,8 @@
 
 #include "cocos2d.h"
 
+#include "CellDownload/CellDownloadManager.h"
+
 class HelloWorld : public cocos2d::Layer
 {
 public:
@@ -14,6 +16,8 @@ public:
     
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* pSender);
+
+	void onWorking(WORK_STATE workState, const std::string& fileName, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize);
     
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);

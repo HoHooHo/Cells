@@ -10,16 +10,6 @@
 #pragma once
 #include "Download/DownloadConig.h"
 #include "Cell/CellWorkCenter.h"
-#include "Cell/CellWorkState.h"
-
-typedef std::function<void(WORK_STATE workState, const std::string& fileName, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize)> DownloadObserverFunctor ;
-#define DOWNLOAD_OBSERVER_CREATER(__selector__,__target__) std::bind(&__selector__,__target__, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4, std::placeholders::_5, std::placeholders::_6, std::placeholders::_7)
-
-typedef std::function<void(const std::string& fileName)> DownloadErrorObserverFunctor ;
-#define DOWNLOAD_ERROR_OBSERVER_CREATER(__selector__,__target__) std::bind(&__selector__,__target__, std::placeholders::_1)
-
-typedef std::function<void()> DownloadRestartObserverFunctor ;
-#define DOWNLOAD_RESTART_OBSERVER_CREATER(__selector__,__target__) std::bind(&__selector__,__target__)
 
 
 class CellDownloadManager : public cocos2d::Ref
@@ -32,7 +22,7 @@ private:
 	DownloadErrorObserverFunctor _errorObserver ;
 	DownloadErrorObserverFunctor _idxErrorObserver ;
 	DownloadRestartObserverFunctor _restartObserver ;
-	CellForceUpdateObserverFunctor _forceUpdateObserver ;
+	DownloadForceUpdateObserverFunctor _forceUpdateObserver ;
 
 	bool _autoDownload ; //auto start download when finish checked
 
@@ -80,7 +70,7 @@ public:
 	void registerErrorObserver(const DownloadErrorObserverFunctor& observer) ;
 	void registerIdxErrorObserver(const DownloadErrorObserverFunctor& observer) ;
 	void registerRestartObserver(const DownloadRestartObserverFunctor& observer) ;
-	void registerForceUpdateObserver(const CellForceUpdateObserverFunctor& observer) ;
+	void registerForceUpdateObserver(const DownloadForceUpdateObserverFunctor& observer) ;
 
 
 	void setRestartKeyWord(const char* keyWord) { _restartKeyWord = keyWord  ; } ;

@@ -64,7 +64,7 @@ void CellHandler::onDownload(Cell* cell, bool bRet)
 	}
 }
 
-void CellHandler::registerForceUpdateObserver(const CellForceUpdateObserverFunctor& forceUpdateObserver)
+void CellHandler::registerForceUpdateObserver(const DownloadForceUpdateObserverFunctor& forceUpdateObserver)
 {
 	_forceUpdateObserver = forceUpdateObserver ;
 }
@@ -79,7 +79,7 @@ void CellHandler::registerDownloadObserver(const CellObserverFunctor& downloadOb
 	_downloadObserver = downloadObserver ;
 }
 
-void CellHandler::registerObserver(const CellForceUpdateObserverFunctor& forceUpdateObserver, const CellObserverFunctor& checkObserver, const CellObserverFunctor& downloadObserver)
+void CellHandler::registerObserver(const DownloadForceUpdateObserverFunctor& forceUpdateObserver, const CellObserverFunctor& checkObserver, const CellObserverFunctor& downloadObserver)
 {
 	registerForceUpdateObserver(forceUpdateObserver) ;
 	registerCheckObserver(checkObserver) ;

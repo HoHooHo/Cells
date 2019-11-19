@@ -137,9 +137,6 @@
     <ClInclude Include="..\Classes\CellDownload\Cell\CellWorkCenter.h">
       <Filter>src\CellDownload\Cell</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\CellDownload\Cell\CellWorkState.h">
-      <Filter>src\CellDownload\Cell</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\CellDownload\Download\DownloadConig.h">
       <Filter>src\CellDownload\Download</Filter>
     </ClInclude>

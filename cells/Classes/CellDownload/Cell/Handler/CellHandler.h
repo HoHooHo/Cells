@@ -29,7 +29,7 @@ private:
 	int _cellTotalCount ;
 
 private:
-	CellForceUpdateObserverFunctor _forceUpdateObserver ;
+	DownloadForceUpdateObserverFunctor _forceUpdateObserver ;
 	CellObserverFunctor _checkObserver ;
 	CellObserverFunctor _downloadObserver ;
 
@@ -44,10 +44,10 @@ public:
 	CellHandler(DownloadConig* config, int workThreadCount) ;
 	virtual ~CellHandler() ;
 
-	void registerForceUpdateObserver(const CellForceUpdateObserverFunctor& forceUpdateObserver) ;
+	void registerForceUpdateObserver(const DownloadForceUpdateObserverFunctor& forceUpdateObserver) ;
 	void registerCheckObserver(const CellObserverFunctor& checkObserver) ;
 	void registerDownloadObserver(const CellObserverFunctor& downloadObserver) ;
-	void registerObserver(const CellForceUpdateObserverFunctor& forceUpdateObserver, const CellObserverFunctor& checkObserver, const CellObserverFunctor& downloadObserver) ;
+	void registerObserver(const DownloadForceUpdateObserverFunctor& forceUpdateObserver, const CellObserverFunctor& checkObserver, const CellObserverFunctor& downloadObserver) ;
 
 	void postCheckWork(DownloadConig* config, const char* fileName) ;
 	void postDownloadWork(CellQueue<Cell*>& newCells) ;

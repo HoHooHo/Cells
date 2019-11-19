@@ -336,8 +336,8 @@ void CellWorkCenter::registerObserver(const CellCheckObserverFunctor& checkingOb
 									  const CellDownloadObserverFunctor& downloadingObserver, 
 									  const CellDownloadObserverFunctor& allDownloadedObserver, 
 									  const CellDownloadObserverFunctor& downloadErrorObserver, 
-									  const DownloadIdxErrorObserverFunctor& downloadIdxErrorObserver,
-									  const CellForceUpdateObserverFunctor& forceUpdateObserver
+									  const DownloadErrorObserverFunctor& downloadIdxErrorObserver,
+									  const DownloadForceUpdateObserverFunctor& forceUpdateObserver
 									  )
 {
 	_checkingObserver = checkingObserver ;
