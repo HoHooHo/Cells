@@ -36,20 +36,18 @@ bool CellCheckWorker::doWork(Cell* cell)
 
 		std::string cellMD5 = cell->getMD5() ;
 		std::string fileMD5 = cell->getLocalMD5() ;
-		// 当部分下载失败时为了不重复下载，把需要下载的文件进行md5对比
-			if (DirUtil::getInstance()->isFileExist(desFile.c_str(), true))
-			{
-				fileMD5 = QuickMD5::getInstance()->MD5File(desFile.c_str()) ;
-			}
-			else if (DirUtil::getInstance()->isFileExist(srcFile.c_str(), true))
-			{
-				fileMD5 = QuickMD5::getInstance()->MD5File(srcFile.c_str()) ;
-			}
 
-		if (cellMD5.compare(fileMD5) == 0)
+		// 当部分下载失败时为了不重复下载，把需要下载的文件进行md5对比
+		if (DirUtil::getInstance()->isFileExist(desFile.c_str()))
 		{
-			bRet = false ;
+			fileMD5 = QuickMD5::getInstance()->MD5File(desFile.c_str()) ;
 		}
+		else if (DirUtil::getInstance()->isFileExist(srcFile.c_str()))
+		{
+			fileMD5 = QuickMD5::getInstance()->MD5File(srcFile.c_str()) ;
+		}
+
+		bRet = cellMD5.compare(fileMD5) != 0 ;
 	}
 
 	return bRet ;

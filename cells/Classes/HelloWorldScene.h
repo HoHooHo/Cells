@@ -18,7 +18,11 @@ public:
     void menuCloseCallback(cocos2d::Ref* pSender);
 
 	void onWorking(WORK_STATE workState, const std::string& fileName, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize);
-    
+	void onDownloadError(std::string filename);
+	void onDownloadXMLError(std::string filename);
+	void onRestart();
+	void onForceUpdate(std::string newVersion);
+
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
 };

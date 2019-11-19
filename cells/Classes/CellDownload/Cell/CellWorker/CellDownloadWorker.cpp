@@ -75,7 +75,7 @@ bool CellDownloadWorker::doWork(Cell* cell)
 					DirUtil::getInstance()->renameFile(dir, tempFileName, fileName) ;
 				}else
 				{
-					CELL_LOG("***   MD5 Faile    ***") ;
+					CELL_LOG("***   MD5 Fail    ***") ;
 				}
 
 
@@ -110,7 +110,7 @@ void CellDownloadWorker::saveMD5File(const char* file, std::string md5)
 		FILE* fp = fopen(file, "w+") ;
 		if (fp)
 		{
-			fprintf(fp, "%s", md5.c_str()) ;
+			fprintf(fp, md5.c_str()) ;
 		}
 
 		fclose(fp) ;
@@ -172,11 +172,11 @@ bool CellDownloadWorker::needBrokenResume(Cell* cell)
 
 	std::string md5File = desRoot + md5Name ;
 	std::string tempFile = desRoot + cell->getName() + TEMP_SUFFIX
-	if (DirUtil::getInstance()->isFileExist(md5File.c_str(), true) && DirUtil::getInstance()->isFileExist(tempFile.c_str(), true))
+	if (DirUtil::getInstance()->isFileExist(md5File.c_str()) && DirUtil::getInstance()->isFileExist(tempFile.c_str()))
 	{
 		std::string brokenMD5 = DirUtil::getInstance()->getStringFromFile(md5File.c_str()) ;
 
-		if (cell->getMD5().compare(brokenMD5) == 0 && cocos2d::FileUtils::getInstance()->getFileSize(tempFile) < cell->getSize() )
+		if (cell->getMD5().compare(brokenMD5) == 0 && NS_CELL::DirUtil::getInstance()->getFileSize(tempFile) < cell->getSize() )
 		{
 			brokenResume = true ;
 		}

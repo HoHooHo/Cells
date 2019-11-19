@@ -39,6 +39,11 @@ DirUtil* DirUtil::getInstance()
 	return s_dirUtil ;
 }
 
+void DirUtil::purgeCachedEntries()
+{
+	cocos2d::FileUtils::getInstance()->purgeCachedEntries() ;
+}
+
 void DirUtil::setRoot(const std::string& srcRoot, const std::string& desRoot){
 	this->srcRoot = srcRoot;
 	this->desRoot = desRoot;
@@ -133,7 +138,7 @@ bool DirUtil::isDirExistByFileName(const char* fileName)
 	return isDirExist(getDirByFileName(fileName).c_str()) ;
 }
 
-bool DirUtil::isFileExist(const char* file, const bool ignoreCache /*= false*/)
+bool DirUtil::isFileExist(const char* file)
 {
 	//	return this->access(file) ;
 	//std::unique_lock<std::mutex> lock(_mutex) ;
@@ -457,6 +462,12 @@ void DirUtil::iterateFolder(const std::string& folder, int depth /* = 0 */)
 	}
 #endif
 
+}
+
+
+long DirUtil::getFileSize(const std::string &filepath)
+{
+	return cocos2d::FileUtils::getInstance()->getFileSize(filepath) ;
 }
 
 NS_CELL_END

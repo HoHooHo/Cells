@@ -29,7 +29,7 @@ CellWorkCenter::CellWorkCenter(DownloadConig* config, int workThreadCount)
 	,_downloadingObserver(nullptr)
 	,_allDownloadedObserver(nullptr)
 	,_downloadErrorObserver(nullptr)
-	,_downloadIdxErrorObserver(nullptr)
+	,_downloadXMLErrorObserver(nullptr)
 	,_forceUpdateObserver(nullptr)
 {
 	_dowloader = new Downloader() ;
@@ -238,11 +238,8 @@ bool CellWorkCenter::checkHashFile(const std::string& fileName)
 	{
 		std::string hashFileStr = DirUtil::getInstance()->getStringFromFile(hashFile.c_str()) ;
 		std::string hashFileTempStr = DirUtil::getInstance()->getStringFromFile(hashTempFile.c_str()) ;
-		if (hashFileStr.compare(hashFileTempStr) == 0)
-		{
-			//have not update
-			update = false ;
-		}
+
+		update = hashFileStr.compare(hashFileTempStr) != 0 ;
 	}
 
 	return update ;
@@ -259,7 +256,7 @@ bool CellWorkCenter::renameHash(const std::string& xmlName, int count)
 		std::string hashTempFileName = hashFileName + TEMP_SUFFIX ;
 		std::string tempFileName = xmlName + TEMP_SUFFIX ;
 
-		if (DirUtil::getInstance()->isFileExist( (desRoot + hashTempFileName).c_str(), true))
+		if (DirUtil::getInstance()->isFileExist((desRoot + hashTempFileName).c_str()))
 		{
 			DirUtil::getInstance()->renameFile(desRoot, hashTempFileName, hashFileName) ;
 			DirUtil::getInstance()->renameFile(desRoot, tempFileName, xmlName) ;
@@ -318,9 +315,9 @@ void CellWorkCenter::doWork(const std::string& fileName)
 			_cellHandler->postCheckWork(_config, fileName.c_str()) ;
 		}else
 		{
-			if (_downloadIdxErrorObserver)
+			if (_downloadXMLErrorObserver)
 			{
-				_downloadIdxErrorObserver(fileName) ;
+				_downloadXMLErrorObserver(fileName) ;
 			}
 		}
 	}else
@@ -336,7 +333,7 @@ void CellWorkCenter::registerObserver(const CellCheckObserverFunctor& checkingOb
 									  const CellDownloadObserverFunctor& downloadingObserver, 
 									  const CellDownloadObserverFunctor& allDownloadedObserver, 
 									  const CellDownloadObserverFunctor& downloadErrorObserver, 
-									  const DownloadErrorObserverFunctor& downloadIdxErrorObserver,
+									  const DownloadErrorObserverFunctor& downloadXMLErrorObserver,
 									  const DownloadForceUpdateObserverFunctor& forceUpdateObserver
 									  )
 {
@@ -346,7 +343,7 @@ void CellWorkCenter::registerObserver(const CellCheckObserverFunctor& checkingOb
 	_downloadingObserver = downloadingObserver ;
 	_allDownloadedObserver = allDownloadedObserver ;
 	_downloadErrorObserver = downloadErrorObserver ;
-	_downloadIdxErrorObserver = downloadIdxErrorObserver ;
+	_downloadXMLErrorObserver = downloadXMLErrorObserver ;
 
 	_forceUpdateObserver = forceUpdateObserver ;
 }

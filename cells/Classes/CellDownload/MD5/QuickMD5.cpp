@@ -10,6 +10,7 @@
 #include "QuickMD5.h"
 #include <iostream>
 #include "../Utils/CellPlatform.h"
+#include "../Utils/DirUtil.h"
 
 extern "C" {
 #include "MD5/md5.h"
@@ -32,7 +33,7 @@ QuickMD5* QuickMD5::getInstance()
 const std::string QuickMD5::MD5File(const char* path)
 {
 	//std::unique_lock<std::mutex> lock(_mutex) ;
-	std::string fullPath = cocos2d::FileUtils::getInstance()->fullPathForFilename(path) ;
+	std::string fullPath = NS_CELL::DirUtil::getInstance()->fullPathForFilename(path) ;
 	CELL_LOG("QuickMD5::MD5File:  file = %s", fullPath.c_str()) ;
 	cocos2d::Data data = cocos2d::FileUtils::getInstance()->getDataFromFile( fullPath ) ;
 	const std::string md5 = _MD5String((void*)(data.getBytes()), data.getSize()) ;

@@ -73,7 +73,7 @@ private:
 	void onDownload(Cell* cell, bool bRet) ;
 
 private:
-	void loadBalanceDispatch(int count, int per, std::vector<CellWorker*>& works, 
+	void loadBalanceDispatch(size_t count, size_t per, std::vector<CellWorker*>& works, 
 							CellQueue<Cell*>& srcCells, 
 							CellMap<std::string, Cell*>& desCells) ;
 

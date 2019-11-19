@@ -8,6 +8,7 @@
 *****************************************************************************/
 
 #include "CellParser.h"
+#include "../../Utils/DirUtil.h"
 
 NS_CELL_BEGIN
 
@@ -29,7 +30,7 @@ bool CellParser::parse(DownloadConig* config, const char* fileName)
 {
 	_fileName = fileName ;
 
-	std::string srcFullName = cocos2d::FileUtils::getInstance()->fullPathForFilename(config->getSrcRoot() + std::string(fileName)) ;
+	std::string srcFullName = NS_CELL::DirUtil::getInstance()->fullPathForFilename( (config->getSrcRoot() + std::string(fileName)).c_str() ) ;
 
 	std::string tempFullName = config->getDesRoot() + std::string(fileName) + TEMP_SUFFIX ;
 	cocos2d::SAXParser parser ;
@@ -45,7 +46,7 @@ bool CellParser::parse(DownloadConig* config, const char* fileName)
 
 	_local = true;
 
-	if (cocos2d::FileUtils::getInstance()->isFileExist(srcFullName))
+	if (NS_CELL::DirUtil::getInstance()->isFileExist(srcFullName.c_str()))
 	{
 		bRet = parser.parse(srcFullName) ;
 	}

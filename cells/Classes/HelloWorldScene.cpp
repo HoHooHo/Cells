@@ -140,9 +140,31 @@ void HelloWorld::onWorking(WORK_STATE workState, const std::string& fileName, bo
 		break;
 	case WORK_STATE_08_WAIT:
 		CCLOG("************WORK_STATE_08_WAIT") ;
+
+		CCLOG("**************************************** OVER") ;
 		break;
 	}
 
+}
+
+void HelloWorld::onDownloadError(std::string filename)
+{
+	CCLOG("************ onDownloadError: %s", filename.c_str()) ;
+}
+
+void HelloWorld::onDownloadXMLError(std::string filename)
+{
+	CCLOG("************ onDownloadXMLError: %s", filename.c_str()) ;
+}
+
+void HelloWorld::onRestart()
+{
+	CCLOG("************************************************ onRestart") ;
+}
+
+void HelloWorld::onForceUpdate(std::string newVersion)
+{
+	CCLOG("************ onForceUpdate: %s", newVersion.c_str()) ;
 }
 
 int m = 0 ;
@@ -156,13 +178,15 @@ void HelloWorld::menuCloseCallback(Ref* pSender)
 		
 		//cdm->registerObserver(DownloadObserverFunctor(foo)) ;
 		cdm->registerObserver(DOWNLOAD_OBSERVER_CREATER(HelloWorld::onWorking, this));
+		cdm->registerErrorObserver(DOWNLOAD_ERROR_OBSERVER_CREATER(HelloWorld::onDownloadError, this));
+		cdm->registerXMLErrorObserver(DOWNLOAD_ERROR_OBSERVER_CREATER(HelloWorld::onDownloadXMLError, this));
+		cdm->registerRestartObserver(DOWNLOAD_RESTART_OBSERVER_CREATER(HelloWorld::onRestart, this));
+		cdm->registerForceUpdateObserver(DOWNLOAD_FORCE_UPDATE_OBSERVER_CREATER(HelloWorld::onForceUpdate, this));
+		cdm->setRestartKeyWord("core_res");
 		cdm->postWork("cells.xml") ;
 
 	}else if(m == 2)
 	{
-		cdm->postWork("cells1.xml") ;
-	}
-	else{
 		delete cdm ;
 		cdm = nullptr ;
 		m = 0 ;

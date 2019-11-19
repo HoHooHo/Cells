@@ -20,7 +20,7 @@ private:
 
 	DownloadObserverFunctor _observer ;
 	DownloadErrorObserverFunctor _errorObserver ;
-	DownloadErrorObserverFunctor _idxErrorObserver ;
+	DownloadErrorObserverFunctor _XMLErrorObserver ;
 	DownloadRestartObserverFunctor _restartObserver ;
 	DownloadForceUpdateObserverFunctor _forceUpdateObserver ;
 
@@ -32,7 +32,7 @@ private:
 	std::recursive_mutex _stateMutex ;
 
 	std::vector<std::string> _failedFiles ;
-	std::string _failedIdxFile ;
+	std::string _failedXMLFile ;
 
 	std::string _fileName ;
 	/*
@@ -68,7 +68,7 @@ public:
 
 	void registerObserver(const DownloadObserverFunctor& observer) ;
 	void registerErrorObserver(const DownloadErrorObserverFunctor& observer) ;
-	void registerIdxErrorObserver(const DownloadErrorObserverFunctor& observer) ;
+	void registerXMLErrorObserver(const DownloadErrorObserverFunctor& observer) ;
 	void registerRestartObserver(const DownloadRestartObserverFunctor& observer) ;
 	void registerForceUpdateObserver(const DownloadForceUpdateObserverFunctor& observer) ;
 
@@ -87,7 +87,7 @@ private:
 
 	void onDownloading(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize) ;
 	void onDownloadError(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize) ;
-	void onDownloadIdxError(const std::string& fileName) ;
+	void onDownloadXMLError(const std::string& fileName) ;
 	void onAllDownloadedFinish(NS_CELL::Cell* cell, bool bRet, int nowCount, int totalCount, double nowSize, double totalSize) ;
 
 };

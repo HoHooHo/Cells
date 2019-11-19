@@ -18,11 +18,13 @@ class DirUtil
 public:
 	static DirUtil* getInstance() ;
 
+	void purgeCachedEntries();
+
 	void setRoot(const std::string& srcRoot, const std::string& desRoot);
 
 	bool isDirExist(const char* dir) ;
 	bool isDirExistByFileName(const char* fileName) ;
-	bool isFileExist(const char* file, const bool ignoreCache = false) ;
+	bool isFileExist(const char* file) ;
 
 	std::string getStringFromFile(const char* file) ;
 
@@ -43,6 +45,8 @@ public:
 	std::string getNameByFileName(const std::string& fileName) ;
 	std::string getExtNameByFileName(const std::string& fileName) ;
 	std::string replaceExtName(std::string fileName, const std::string& newExtName) ;
+
+	long getFileSize(const std::string &filepath);
 
 private:
 	DirUtil() {} ;

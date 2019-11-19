@@ -16,8 +16,9 @@ NS_CELL_BEGIN
 	
 const int DEAULT_WORKER_NUM = 8 ;
 const int SLEEP_DELTA = 100 ;
-const int LOAD_BALANCE_PER = 5 ;
-const int LOAD_BALANCE_COUNT = 3 ;
+
+const size_t LOAD_BALANCE_PER = 5 ;
+const size_t LOAD_BALANCE_COUNT = 3 ;
 
 CellWorkerFactory::CellWorkerFactory(DownloadConig* config, int workerCount)
 	:_workerCount(workerCount)
@@ -231,11 +232,11 @@ void CellWorkerFactory::onDownload(Cell* cell, bool bRet)
 }
 
 
-void CellWorkerFactory::loadBalanceDispatch(int count, int per, std::vector<CellWorker*>& works, 
+void CellWorkerFactory::loadBalanceDispatch(size_t count, size_t per, std::vector<CellWorker*>& works, 
 											CellQueue<Cell*>& srcCells, 
 											CellMap<std::string, Cell*>& desCells)
 {
-	for (int i = 0; i < count; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		for (size_t j = 0; j < works.size(); j++)
 		{

@@ -51,7 +51,7 @@ private:
 	CellDownloadObserverFunctor _downloadingObserver ;
 	CellDownloadObserverFunctor _allDownloadedObserver ;
 	CellDownloadObserverFunctor _downloadErrorObserver ;
-	DownloadErrorObserverFunctor _downloadIdxErrorObserver ;
+	DownloadErrorObserverFunctor _downloadXMLErrorObserver ;
 	DownloadForceUpdateObserverFunctor  _forceUpdateObserver ;
 
 private:
@@ -86,7 +86,7 @@ public:
 						  const CellDownloadObserverFunctor& downloadingObserver, 
 						  const CellDownloadObserverFunctor& allDownloadedObserver, 
 						  const CellDownloadObserverFunctor& downloadErrorObserver, 
-						  const DownloadErrorObserverFunctor& downloadIdxErrorObserver,
+						  const DownloadErrorObserverFunctor& downloadXMLErrorObserver,
 						  const DownloadForceUpdateObserverFunctor& forceUpdateObserver
 						  ) ;
 

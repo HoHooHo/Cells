@@ -38,10 +38,10 @@ CellDownloadManager::~CellDownloadManager()
 
 void CellDownloadManager::init(const std::vector<std::string>& urlVector, const std::string& srcRoot, const std::string& desRoot, const std::string& randomValue, int workThreadCount)
 {
-	_failedIdxFile = "" ;
+	_failedXMLFile = "" ;
 	_observer = nullptr ;
 	_errorObserver = nullptr ;
-	_idxErrorObserver = nullptr ;
+	_XMLErrorObserver = nullptr ;
 	_restartObserver = nullptr ;
 	_forceUpdateObserver = nullptr ;
 	_autoDownload = false ;
@@ -63,7 +63,7 @@ void CellDownloadManager::init(const std::vector<std::string>& urlVector, const 
 								  CELL_DOWNLOAD_OBSERVER_CREATER(CellDownloadManager::onDownloading, this),
 								  CELL_DOWNLOAD_OBSERVER_CREATER(CellDownloadManager::onAllDownloadedFinish, this),
 								  CELL_DOWNLOAD_OBSERVER_CREATER(CellDownloadManager::onDownloadError, this),
-								  CELL_DOWNLOAD_IDX_ERR_OBSERVER_CREATER(CellDownloadManager::onDownloadIdxError, this),
+								  CELL_DOWNLOAD_XML_ERR_OBSERVER_CREATER(CellDownloadManager::onDownloadXMLError, this),
 								  CELL_FORCE_UPDATE_OBSERVER_CREATER(CellDownloadManager::onForceUpdate, this)
 								) ;
 	cocos2d::Director::getInstance()->getScheduler()->schedule(schedule_selector(CellDownloadManager::scheduleUpdate), this, SCHEDULE_INTERVAL, kRepeatForever, 0, false) ;
@@ -119,6 +119,8 @@ void CellDownloadManager::onDownloading(NS_CELL::Cell* cell, bool bRet, int nowC
 	_nowSize = nowSize ;
 	_totalSize = totalSize ;
 	//CELL_LOG("CellDownloadManager::onDownloading   %d / %d    %lf.2 / %lf.2", nowCount, totalCount, nowSize, totalSize) ;
+
+	//下载完成后是否需要重启
 	if (_restartKeyWord.size() > 0 && _restartObserver && _fileName.find(_restartKeyWord) != std::string::npos)
 	{
 		_restartObserver() ;
@@ -138,20 +140,23 @@ void CellDownloadManager::onDownloadError(NS_CELL::Cell* cell, bool bRet, int no
 	//CELL_LOG("CellDownloadManager::onDownloadError   %d / %d    %lf.2 / %lf.2", nowCount, totalCount, nowSize, totalSize) ;
 
 	_failedFiles.push_back(_fileName) ;
+
+	//有可能涉及具体业务逻辑，回归到主线程调用
 	/*if (_errorObserver)
 	{
 	_errorObserver(_fileName) ;
 	}*/
 }
 
-void CellDownloadManager::onDownloadIdxError(const std::string& fileName)
+void CellDownloadManager::onDownloadXMLError(const std::string& fileName)
 {
 	std::unique_lock<std::recursive_mutex> lock(_stateMutex) ;
-	_failedIdxFile = fileName ;
+	_failedXMLFile = fileName ;
 
-	/*if (_idxErrorObserver)
+	//有可能涉及具体业务逻辑，回归到主线程调用
+	/*if (_XMLErrorObserver)
 	{
-	_idxErrorObserver(fileName) ;
+	_XMLErrorObserver(fileName) ;
 	}*/
 }
 
@@ -169,7 +174,7 @@ void CellDownloadManager::onAllDownloadedFinish(NS_CELL::Cell* cell, bool bRet, 
 	_totalCount = totalCount ;
 	_nowSize = nowSize ;
 	_totalSize = totalSize ;
-	cocos2d::FileUtils::getInstance()->purgeCachedEntries() ;
+	NS_CELL::DirUtil::getInstance()->purgeCachedEntries() ;
 	//CELL_LOG("CellDownloadManager::onAllDownloadedFinish   %d / %d    %lf.2 / %lf.2", nowCount, totalCount, nowSize, totalSize) ;
 }
 
@@ -190,9 +195,12 @@ void CellDownloadManager::scheduleUpdate(float delta)
 {
 	std::unique_lock<std::recursive_mutex> lock(_stateMutex) ;
 
-	if (!_failedIdxFile.empty() && _idxErrorObserver)
+	if (!_failedXMLFile.empty() && _XMLErrorObserver)
 	{
-		_idxErrorObserver(_failedIdxFile) ;
+		_XMLErrorObserver(_failedXMLFile) ;
+
+		_failedXMLFile = "" ;
+		_state = WORK_STATE_08_WAIT ;
 		return ;
 	}
 
@@ -235,9 +243,9 @@ void CellDownloadManager::registerErrorObserver(const DownloadErrorObserverFunct
 	_errorObserver = observer ;
 }
 
-void CellDownloadManager::registerIdxErrorObserver(const DownloadErrorObserverFunctor& observer)
+void CellDownloadManager::registerXMLErrorObserver(const DownloadErrorObserverFunctor& observer)
 {
-	_idxErrorObserver = observer ;
+	_XMLErrorObserver = observer ;
 }
 
 void CellDownloadManager::registerRestartObserver(const DownloadRestartObserverFunctor& observer)
